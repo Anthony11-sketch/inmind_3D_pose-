@@ -1,0 +1,39 @@
+# Point cloud registration: FPFH + FGR + multi-scale ICP
+# Override with env: CONFIG_USE_GPU=1 to enable GPU
+
+# Preprocessing
+preprocessing:
+  voxel_size: 0.17
+  normal_max_nn: 8
+  fpfh_max_nn: 25
+  normal_radius_factor: 2.0
+  fpfh_radius_factor: 4.0
+
+# Fast Global Registration (coarse alignment)
+fgr:
+  max_correspondence_factor: 1.5
+  iteration_number: 5
+
+# Point-to-plane ICP (multi-scale refinement)
+icp:
+  distances: [0.15, 0.05]
+  max_iteration: 5
+  relative_fitness: 1.0e-6
+  relative_rmse: 1.0e-6
+
+# Final refinement (denser voxel grid)
+icp_refinement:
+  voxel: 0.08
+  dist: 0.02
+  iter: 2
+
+# Multi-scale ICP (used when use_gpu=true)
+icp_multiscale:
+  voxel_sizes: [0.17, 0.1, 0.08]
+  max_correspondence_distances: [0.15, 0.05, 0.02]
+  criteria_max_iterations: [20, 15, 10]
+
+# Device (CPU faster for typical point cloud sizes)
+device:
+  use_gpu: false
+  gpu_device_id: 0
